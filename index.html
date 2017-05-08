@@ -32,15 +32,15 @@
     </form>
 
     <table cellpadding="10" style="border-collapse: collapse;">
-
       <tr ng-repeat="item in items" style="border-bottom: solid 1px lightgray;">
-        <td>{{ item.itm }}
+        <td ng-click="checkCurrentItem(item)">{{ item.itm }}
         </td>
 
         <td>
           <button ng-click="deleteItem(item)">Delete</button>
         </td>
       </tr>
+
     </table>
 
 
@@ -51,13 +51,23 @@
 
   <section class="col-right">
     <h2 class="app-headline">{{ appHeadline }}</h2>
-    <div ng-repeat="item in items">
-      <p>
-        {{ item.comment }}
-      </p>
-    </div>
-    <input type="text" name="comment" ng-model="comment" placeholder="Comment">
+    <form name="frm2">
+      <div ng-repeat="item in items">
+        <p>
+          {{ item.comment }}
+        </p>
 
+      </div>
+      <div ng-repeat="comment in comments">
+        <p>
+          {{ comment.comment }}
+        </p>
+        <hr>
+
+      </div>
+      <input type="text" name="comment" ng-model="comment" placeholder="Comment">
+      <button ng-click="addComment()" ng-disabled="frm2.$invalid">Add new</button>
+    </form>
   </section>
 
 </div>
