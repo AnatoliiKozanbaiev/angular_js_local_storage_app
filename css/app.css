@@ -11,3 +11,7 @@
   float: right;
   padding: 1%;
 }
+
+.checkedItem {
+  border-left: red solid 3px;
+}

@@ -15,7 +15,10 @@ function initiateLocalStorage() {
     $scope.comments = getLocalStorage.getComments();
 
     // count the item list
-    $scope.count = $scope.items.length;
+    $scope.count = $scope.items.length
+    $scope.checkedItem = null;
+    $scope.tableItemElem = document.getElementById('tableItemElem');
+    $scope.previousTdElem = null;
 
 
     // add item - using angularJS push to add Item in the Item object
@@ -24,7 +27,7 @@ function initiateLocalStorage() {
     // update the count
     $scope.addItem = function () {
       $scope.items.push({ 'itm': $scope.itm, 'comment' : $scope.comment });
-      console.log($scope.items);
+      console.log('$scope.items are ' + $scope.items);
       getLocalStorage.updateItems($scope.items);
       $scope.itm = '';
       $scope.comment = '';
@@ -33,20 +36,34 @@ function initiateLocalStorage() {
 
     $scope.addComment = function () {
       $scope.comments.push({'comment' : $scope.comment });
-      console.log($scope.comments);
+      console.log("$scope.comments are " + $scope.comments);
       getLocalStorage.updateComments($scope.comments);
       $scope.comment = '';
 
     };
 
-    $scope.checkCurrentItem = function (itm) {
-      console.log('current item is ' + $scope.items.indexOf(itm));
+
+
+    $scope.checkCurrentItem = function (itm, $index) {
+      $scope.checkedItem = $scope.items.indexOf(itm);
+
+      if ($scope.previousTdElem != null) {
+        $scope.previousTdElem.removeAttribute("class");
+      }
+
+      $scope.checkedTdElem = $scope.tableItemElem.children[0].children[$index].children[0];
+      $scope.checkedTdElem.setAttribute("class", "checkedItem");
+      $scope.previousTdElem = $scope.checkedTdElem;
+
+
+      console.log('current checked item is ' + $scope.checkedItem);
     };
 
     // delete item - using angularJS splice to remove the itm row from the Item list
     // all the update item to update the locally stored Item list
     // update the count
     $scope.deleteItem = function (itm) {
+      localStorage.removeItem("comments");
       $scope.items.splice($scope.items.indexOf(itm), 1);
       getLocalStorage.updateItems($scope.items);
       $scope.count = $scope.items.length
@@ -54,7 +71,7 @@ function initiateLocalStorage() {
   }]);
 
   // create the storage service module
-  // create getLocalStorage service to access UpdateItems and getItems method
+  // create getLocalStorage service to access UpdateItems and getItems | getComments method
   var storageService = angular.module('storageService', []);
   storageService.factory('getLocalStorage', function () {
     var itemList = {};

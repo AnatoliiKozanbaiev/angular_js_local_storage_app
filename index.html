@@ -31,9 +31,9 @@
       </table>
     </form>
 
-    <table cellpadding="10" style="border-collapse: collapse;">
+    <table id="tableItemElem" cellpadding="10" style="border-collapse: collapse;">
       <tr ng-repeat="item in items" style="border-bottom: solid 1px lightgray;">
-        <td ng-click="checkCurrentItem(item)">{{ item.itm }}
+        <td ng-click="checkCurrentItem(item, $index)">{{ item.itm }}
         </td>
 
         <td>
