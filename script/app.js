@@ -15,7 +15,7 @@ function initiateLocalStorage() {
     $scope.comments = getLocalStorage.getComments();
 
     // count the item list
-    $scope.count = $scope.items.length
+    $scope.count = $scope.items.length;
     $scope.checkedItem = null;
     $scope.tableItemElem = document.getElementById('tableItemElem');
     $scope.previousTdElem = null;
@@ -27,7 +27,7 @@ function initiateLocalStorage() {
     // update the count
     $scope.addItem = function () {
       $scope.items.push({ 'itm': $scope.itm, 'comment' : $scope.comment });
-      console.log('$scope.items are ' + $scope.items);
+      console.log($scope.items);
       getLocalStorage.updateItems($scope.items);
       $scope.itm = '';
       $scope.comment = '';
@@ -36,8 +36,8 @@ function initiateLocalStorage() {
 
     $scope.addComment = function () {
       $scope.comments.push({'comment' : $scope.comment });
-      console.log("$scope.comments are " + $scope.comments);
-      getLocalStorage.updateComments($scope.comments);
+      console.log($scope.comments);
+      getLocalStorage.updateComments($scope.comments, $scope.currentCommetsKey);
       $scope.comment = '';
 
     };
@@ -46,6 +46,10 @@ function initiateLocalStorage() {
 
     $scope.checkCurrentItem = function (itm, $index) {
       $scope.checkedItem = $scope.items.indexOf(itm);
+      $scope.currentCommetsKey = itm["$$hashKey"];
+      // localStorage.setItem($scope.currentCommetsKey, "bla-bla-bla");
+      console.log(itm);
+      console.log('key is ' + $scope.currentCommetsKey);
 
       if ($scope.previousTdElem != null) {
         $scope.previousTdElem.removeAttribute("class");
@@ -86,10 +90,10 @@ function initiateLocalStorage() {
         }
         itemList = ItemsArr;
       },
-      updateComments: function (CommentsArr) {
+      updateComments: function (CommentsArr, comments) {
         if (window.localStorage && CommentsArr) {
           // local storage to add data
-          localStorage.setItem("comments", angular.toJson(CommentsArr));
+          localStorage.setItem(comments, angular.toJson(CommentsArr));
         }
         commentList = CommentsArr;
       },
@@ -98,10 +102,10 @@ function initiateLocalStorage() {
         itemList = angular.fromJson(localStorage.getItem("items"));
         return itemList ? itemList : [];
       },
-      getComments: function () {
+      getComments: function (comments) {
         // get data from local storage
-        commentList = angular.fromJson(localStorage.getItem("comments"));
-        return commentList ? commentList : [];
+        commentList = angular.fromJson(localStorage.getItem(comments));
+        return commentList ? angular.fromJson(localStorage.getItem(comments)) : [];
       }
     };
 
