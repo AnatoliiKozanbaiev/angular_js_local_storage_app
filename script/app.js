@@ -17,7 +17,9 @@ function initiateLocalStorage() {
     $scope.count = $scope.items.length;
     $scope.checkedItem = 0;
     $scope.tableItemElem = document.getElementById('tableItemElem');
+    $scope.triggerButton = document.getElementById('trigger-button');
     $scope.previousTdElem = null;
+    $scope.previousTriggerButtonElem = null;
 
     if ($scope.count > 0) {
       $scope.showComments = $scope.items[$scope.checkedItem]["comments"];
@@ -40,7 +42,7 @@ function initiateLocalStorage() {
 
 
       getLocalStorage.updateItems($scope.items);
-      console.log($scope.items[$scope.checkedItem]["comments"]);
+      // console.log($scope.items[$scope.checkedItem]["comments"]);
 
       $scope.itm = '';
       $scope.comment = '';
@@ -69,8 +71,30 @@ function initiateLocalStorage() {
       $scope.checkedTdElem.setAttribute("class", "checkedItem");
       $scope.previousTdElem = $scope.checkedTdElem;
 
-      console.log('current checked item is ' + $scope.checkedItem);
+      $scope.checkedComment = '';
+      if ($scope.previousTriggerButtonElem != null) {
+        $scope.previousTriggerButtonElem.removeAttribute("class");
+        $scope.previousTriggerButtonElem.setAttribute("class", "btn-unchecked-comment");
+      }
+      // console.log('current checked item is ' + $scope.checkedItem);
     };
+
+    $scope.checkCurrentComment = function (i, $index) {
+      $scope.checkedComment = ' #' + ($index + 1);
+
+      if ($scope.previousTriggerButtonElem != null) {
+        $scope.previousTriggerButtonElem.removeAttribute("class");
+        $scope.previousTriggerButtonElem.setAttribute("class", "btn-unchecked-comment");
+      }
+
+      $scope.checkedCommentButtonElem = $scope.triggerButton.children[$index].children[0];
+      $scope.checkedCommentButtonElem.removeAttribute("class");
+      $scope.checkedCommentButtonElem.setAttribute("class", "btn-checked-comment");
+      $scope.previousTriggerButtonElem = $scope.checkedCommentButtonElem;
+
+
+    };
+
 
     // delete item - using angularJS splice to remove the itm row from the Item list
     // all the update item to update the locally stored Item list
@@ -84,20 +108,31 @@ function initiateLocalStorage() {
       if ($scope.count == 0) {
         $scope.showComments = [];
       }
+
       if ($scope.count > 0) {
-        console.log($scope.checkedTdElem);
-        var newIndexMinOne = $index;
-        console.log(newIndexMinOne);
+        // $scope.previousTdElem.removeAttribute("class");
+        var newIndexMinOne = $index - 1;
+        if (newIndexMinOne <= 0) {
+          newIndexMinOne = 0;
+        }
+
         $scope.checkedTdElem = $scope.tableItemElem.children[0].children[newIndexMinOne].children[0];
-        console.log($scope.checkedTdElem);
+
+
+        $scope.checkedItem = newIndexMinOne;
+
+        //$scope.checkedItem = 0;
+        $scope.showComments = $scope.items[$scope.checkedItem]["comments"];
         $scope.checkedTdElem.setAttribute("class", "checkedItem");
         $scope.previousTdElem = $scope.checkedTdElem;
+
+        $scope.checkedComment = '';
+        if ($scope.previousTriggerButtonElem != null) {
+          $scope.previousTriggerButtonElem.removeAttribute("class");
+          $scope.previousTriggerButtonElem.setAttribute("class", "btn-unchecked-comment");
+        }
       }
 
-      /*if ($scope.count > 1) {
-        $scope.checkedItem = 0;
-        $scope.showComments = $scope.items[$scope.checkedItem]["comments"];
-      }*/
     };
   }]);
 
